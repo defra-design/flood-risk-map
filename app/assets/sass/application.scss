@@ -2,6 +2,13 @@
 $govuk-global-styles: true;
 $govuk-new-link-styles: true;
 
+// Tablet/desktop overide to address modern iPads 
+$govuk-breakpoints: (
+  mobile:  320px,
+  tablet:  641px,
+  desktop: 835px
+) !default;
+
 // We can't mount GOV.UK Frontend's assets at root as it's done automatically by the extensions framework.
 $govuk-assets-path: '/govuk/assets/';
 
@@ -11,17 +18,14 @@ $govuk-assets-path: '/govuk/assets/';
 // Tools that aren't in Frontend
 @import "tools/mixins";
 
+// Objects
+@import "objects/buttons";
+
 // Patterns that aren't in Frontend
-@import "patterns/contents-list";
-@import "patterns/mainstream-guide";
-@import "patterns/pagination";
-@import "patterns/related-items";
-@import "patterns/step-by-step-header";
-@import "patterns/step-by-step-nav";
-@import "patterns/step-by-step-related";
-@import "patterns/task-list";
 @import "components/map/ol";
 @import "components/map/map";
-@import "components/map/map-draw";
+@import "components/map/map-key";
+@import "components/map/map-days";
+@import "components/map/map-info";
 
 // Add extra styles here, or re-organise the Sass files in whichever way makes most sense to you

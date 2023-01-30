@@ -1,33 +1,52 @@
-var path = require('path')
+const path = require('path')
+const webpack = require('webpack')
+const dotenv = require('dotenv')
 
-module.exports = {
-  mode: 'development', // 'development' or 'production',
-  devtool: 'source-map', // 'source-map' or 'none',
+dotenv.config({ path: './.env' })
+const nodeEnv = process.env.NODE_ENV
+const inDev = nodeEnv === 'dev' || nodeEnv === 'development'
+
+module.exports = (env, argv) => ({
+  mode: !inDev ? 'production' : 'development',
+  devtool: !inDev ? false : 'source-map',
   entry: {
-    application: './app/assets/javascripts/application',
-    draw: './app/assets/javascripts/pages/draw'
+    application: './app/assets/javascripts/application'
   },
   output: {
-    path: path.join(__dirname, 'public/javascripts'),
-    publicPath: '/public/javascripts',
-    filename: '[name].js'
-  },
-  resolve: {
-    extensions: ['.js']
+    path: path.resolve(__dirname, 'public/javascripts')
   },
   module: {
     rules: [
       {
-        test: /\.js$/,
-        include: [
-          path.join(__dirname, 'app/assets/javascripts')
-        ],
-        exclude: /node_modules/,
+        // Default exclude removes all node_modules but d3 is now distributed es6 so include d3 (& our own src) in transpile
+        include: mPath => mPath.indexOf('app/assets') > -1 || mPath.indexOf('node_modules/d3') > -1 || mPath.indexOf('node_modules/internmap') > -1 || mPath.indexOf('node_modules/ol') > -1,
         use: {
-          loader: 'babel-loader'
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              [
+                '@babel/preset-env',
+                {
+                  useBuiltIns: 'usage',
+                  corejs: 3
+                }
+              ]
+            ]
+          }
         }
       }
     ]
   },
-  cache: false
-}
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env': {
+        BING_API_KEY: JSON.stringify(process.env.BING_API_KEY),
+        OS_API_KEY: JSON.stringify(process.env.OS_API_KEY)
+      }
+    }),
+    new webpack.NormalModuleReplacementPlugin(
+      /node_modules\/ol\/worker\/webgl\.js/, '../../../app/assets/javascripts/ol-worker-webgl-ie11.js'
+    )
+  ],
+  target: ['web', 'es5']
+})

@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node start",
-    "build": "node lib/build/generate-assets",
+    "build": "node ./node_modules/gulp/bin/gulp generate-assets",
     "serve": "node listen-on-port"
   },
   "dependencies": {
@@ -18,11 +18,13 @@
     "ansi-colors": "^4.1.1",
     "babel-loader": "^8.2.5",
     "body-parser": "^1.14.1",
+    "body-scroll-lock": "^4.0.0-beta.0",
     "browser-sync": "^2.27.10",
     "chokidar": "^3.5.3",
     "client-sessions": "^0.8.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
+    "core-js": "^3.19.1",
     "cross-spawn": "^7.0.2",
     "del": "^6.0.0",
     "dotenv": "^10.0.0",
@@ -36,9 +38,16 @@
     "govuk-elements-sass": "^3.1.3",
     "govuk-frontend": "^4.1.0",
     "gray-matter": "^4.0.3",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-nodemon": "^2.2.1",
+    "gulp-nunjucks": "^5.1.0",
+    "gulp-sass": "^5.0.0",
+    "gulp-sourcemaps": "^3.0.0",
     "inquirer": "^8.2.0",
     "lodash": "^4.17.21",
     "marked": "^4.0.10",
+    "node-sass": "^8.0.0",
     "nodemon": "^2.0.15",
     "notifications-node-client": "^5.1.0",
     "nunjucks": "^3.2.1",
@@ -48,10 +57,8 @@
     "sass": "^1.49.10",
     "sync-request": "^6.0.0",
     "universal-analytics": "^0.5.3",
-    "uuid": "^8.3.2"
-  },
-  "devDependencies": {
+    "uuid": "^8.3.2",
     "webpack": "^5.73.0",
-    "webpack-cli": "^4.10.0"
+    "webpack-cli": "^4.9.2"
   }
 }

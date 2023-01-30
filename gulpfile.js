@@ -19,12 +19,12 @@ requireDir('./gulp', { recurse: true })
 gulp.task('generate-assets', gulp.series(
   'clean',
   'sass-extensions',
+  'nunjucks',
   gulp.parallel(
-    'nunjucks',
     'webpack',
-    'sass',
-    'copy-assets'
-  )
+    'sass'
+  ),
+  'copy-assets'
 ))
 gulp.task('default', gulp.series(
   'generate-assets',
