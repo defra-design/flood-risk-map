@@ -37,6 +37,11 @@
     @include govuk-font($size: 19, $weight: bold);
     text-decoration: underline;
     margin-bottom: 2px;
+    pointer-events: none;
+  }
+  span {
+    display: block;
+    pointer-events: none;
   }
   &[aria-selected=true] {
     background-color: white;

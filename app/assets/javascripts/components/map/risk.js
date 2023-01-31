@@ -15,8 +15,8 @@ function RiskMap (mapId, options) {
 
   // View
   const view = new View({
-    zoom: 6,
-    minZoom: 6,
+    zoom: 8,
+    minZoom: 8,
     maxZoom: 14,
     center: maps.center,
     extent: maps.extentLarge
@@ -57,6 +57,7 @@ function RiskMap (mapId, options) {
   // Create MapContainer
   const container = new MapContainer(mapId, containerOptions)
   const containerElement = container.containerElement
+  const closeInfoButton = container.closeInfoButton
   const openKeyButton = container.openKeyButton
   const closeKeyButton = container.closeKeyButton
   const attributionButton = container.attributionButton
@@ -122,25 +123,35 @@ function RiskMap (mapId, options) {
   // Events
   //
 
-  // Handle all Outlook Map specific key presses
+  // Show scenarios if map is clicked
+  map.addEventListener('click', (e) => {
+    showScenarios()
+  })
+
+  // Handle all Risk Map specific key presses
   containerElement.addEventListener('keyup', (e) => {
-    // Re-instate days when key has been closed
+    // Re-instate scenarios when key has been closed
     if (e.key === 'Escape') {
       showScenarios()
     }
   })
 
-  // Clear selectedfeature and hide days when key is opened
+  // Hhide scenarios when key is opened
   openKeyButton.addEventListener('click', (e) => {
     hideScenarios()
   })
 
-  // Re-instate days when key has been closed
+  // Re-instate scenarios when key has been closed
   closeKeyButton.addEventListener('click', (e) => {
     showScenarios()
   })
 
-  // Clear selectedfeature and hide days when attribution is opended
+  // Clear selectedfeature when info is closed
+  closeInfoButton.addEventListener('click', (e) => {
+    showScenarios()
+  })
+
+  // Hide scenarios when attribution is opended
   attributionButton.addEventListener('click', (e) => {
     hideScenarios()
   })
