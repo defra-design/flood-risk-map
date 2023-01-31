@@ -10,6 +10,9 @@ const { setExtentFromLonLat, getLonLatFromExtent } = window.flood.maps
 const MapContainer = maps.MapContainer
 
 function RiskMap (mapId, options) {
+  // Scenario
+  let scenario = 1
+
   // View
   const view = new View({
     zoom: 6,
@@ -29,9 +32,11 @@ function RiskMap (mapId, options) {
 
    // Create day control
   const scenarioElement = document.createElement('div')
+  scenarioElement.id = 'map-scenarios'
+  scenarioElement.className = 'defra-map-scenarios'
   scenarioElement.innerHTML = window.nunjucks.render('scenarios.html')
 
-  const scenario = new Control({
+  const scenarioControl = new Control({
     element: scenarioElement
   })
   
@@ -39,7 +44,7 @@ function RiskMap (mapId, options) {
   const containerOptions = {
     view: view,
     layers: [road],
-    controls: [scenario],
+    controls: [scenarioControl],
     queryParamKeys: ['v'],
     interactions: interactions,
     originalTitle: options.originalTitle,
@@ -69,8 +74,8 @@ function RiskMap (mapId, options) {
 
   // Set day control current day
   const setScenarioButton = () => {
-    forEach(document.querySelectorAll('.defra-map-scenario__button'), (button, i) => {
-      button.setAttribute('aria-selected', i + 1 === state.day)
+    forEach(document.querySelectorAll('.defra-map-scenario-button'), (button, i) => {
+      button.setAttribute('aria-selected', i + 1 === scenario)
     })
   }
 
@@ -141,10 +146,10 @@ function RiskMap (mapId, options) {
   })
 
   // Scenario button
-  forEach(document.querySelectorAll('.defra-map-days__button'), (button) => {
+  forEach(document.querySelectorAll('.defra-map-scenario-button'), (button) => {
     button.addEventListener('click', (e) => {
       e.currentTarget.focus()
-      state.day = parseInt(e.currentTarget.getAttribute('data-scenario'), 10)
+      scenario = parseInt(e.currentTarget.getAttribute('data-scenario'), 10)
       setFeatureVisibility()
       setScenarioButton()
     })
