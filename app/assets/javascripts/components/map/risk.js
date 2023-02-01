@@ -35,7 +35,17 @@ function RiskMap (mapId, options) {
   // Layers
   const road = maps.layers.road()
   const surfaceWater1 = maps.layers.surfaceWater(1, null)
+  const surfaceWater1d = maps.layers.surfaceWater(1, 'd')
+  const surfaceWater1v = maps.layers.surfaceWater(1, 'v')
+  const surfaceWater2 = maps.layers.surfaceWater(2, null)
+  const surfaceWater2d = maps.layers.surfaceWater(2, 'd')
+  const surfaceWater2v = maps.layers.surfaceWater(2, 'v')
+  const surfaceWater3 = maps.layers.surfaceWater(3, null)
+  const surfaceWater3d = maps.layers.surfaceWater(3, 'd')
+  const surfaceWater3v = maps.layers.surfaceWater(3, 'v')
   const riverSea1 = maps.layers.riverSea(1)
+  const riverSea2 = maps.layers.riverSea(2)
+  const riverSea3 = maps.layers.riverSea(3)
 
   // Configure default interactions
   const interactions = defaultInteractions({
@@ -56,7 +66,21 @@ function RiskMap (mapId, options) {
   const containerOptions = {
     view: view,
     // layers: [road, riverSea, surfaceWater],
-    layers: [road, surfaceWater1, riverSea1],
+    layers: [
+      road,
+      surfaceWater1,
+      surfaceWater1d,
+      surfaceWater1v,
+      surfaceWater2,
+      surfaceWater2d,
+      surfaceWater2v,
+      surfaceWater3,
+      surfaceWater3d,
+      surfaceWater3v,
+      riverSea1,
+      riverSea2,
+      riverSea3
+    ],
     controls: [scenarioControl],
     queryParamKeys: ['v'],
     interactions: interactions,

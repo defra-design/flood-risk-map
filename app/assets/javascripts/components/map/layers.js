@@ -47,9 +47,7 @@ window.flood.maps.layers = {
         params: {
           'TRANSPARENT': true,
           'FORMAT': 'GIF',
-          // 'dynamicLayers' : '[{"id":2,"name":"RoFSW_Extent_1in30","source":{"type":"mapLayer","mapLayerId":2},"drawingInfo":{"renderer":{"type":"simple","symbol":{"color":[0,48,120,255],"outline":{"color":[0,0,0,0],"width":0.4,"type":"esriSLS","style":"esriSLSNull"},"type":"esriSFS","style":"esriSFSSolid"}}}},{"id":4,"name":"RoFSW_Extent_1in100","source":{"type":"mapLayer","mapLayerId":4},"drawingInfo":{"renderer":{"type":"simple","symbol":{"color":[76,230,0,255],"outline":{"color":[0,0,0,0],"width":0.4,"type":"esriSLS","style":"esriSLSNull"},"type":"esriSFS","style":"esriSFSSolid"}}}},{"id":6,"name":"RoFSW_Extent_1in1000","source":{"type":"mapLayer","mapLayerId":6},"drawingInfo":{"renderer":{"type":"simple","symbol":{"color":[197,0,255,255],"outline":{"color":[0,0,0,0],"width":0.4,"type":"esriSLS","style":"esriSLSNull"},"type":"esriSFS","style":"esriSFSSolid"}}}}]',
-          'dynamicLayers' : dynamicLayers[liklihood]
-          // 'layers': 'show:6'
+          'dynamicLayers' : dynamicLayers[liklihood-1]
         }
       }),
       visible: false,
