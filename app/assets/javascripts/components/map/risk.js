@@ -2,11 +2,10 @@
 
 // Flood risk map
 import { View } from 'ol'
+import { transform, transformExtent } from 'ol/proj'
+import { containsExtent } from 'ol/extent'
 import { defaults as defaultInteractions } from 'ol/interaction'
 import { Control } from 'ol/control'
-import * as proj4 from 'proj4'
-import { register as registerProj4 } from 'ol/proj/proj4'
-
 
 const { addOrUpdateParameter, getParameterByName, forEach } = window.flood.utils
 const maps = window.flood.maps
@@ -14,12 +13,13 @@ const { setExtentFromLonLat, getLonLatFromExtent } = window.flood.maps
 const MapContainer = maps.MapContainer
 
 function RiskMap (mapId, options) {
-  // Proj4 defs
-  proj4.default.defs('EPSG:27700', '+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.06,0.15,0.247,0.842,-20.489 +units=m +no_defs')
-  registerProj4(proj4.default)
-
   // Scenario
   let scenario = 1
+
+  // State object
+  const state = {
+    initialExt: []
+  }
 
   // View
   const view = new View({
@@ -28,16 +28,14 @@ function RiskMap (mapId, options) {
     zoom: 7,
     minZoom: 0,
     maxZoom: 9,
-    // extent: maps.extent27700,
-    // center: maps.center27700
-    extent: [ -238375.0, 0.0, 900000.0, 1376256.0 ],
-    center: [ 337297, 503695 ]
+    extent: maps.extent,
+    center: maps.centre
   })
 
   // Layers
-  const road = maps.layers.road27700()
-  const surfaceWater = maps.layers.surfaceWater()
-  const riverSea = maps.layers.riverSea()
+  const road = maps.layers.road()
+  const surfaceWater1 = maps.layers.surfaceWater(1, null)
+  const riverSea1 = maps.layers.riverSea(1)
 
   // Configure default interactions
   const interactions = defaultInteractions({
@@ -58,7 +56,7 @@ function RiskMap (mapId, options) {
   const containerOptions = {
     view: view,
     // layers: [road, riverSea, surfaceWater],
-    layers: [road, surfaceWater, riverSea],
+    layers: [road, surfaceWater1, riverSea1],
     controls: [scenarioControl],
     queryParamKeys: ['v'],
     interactions: interactions,
@@ -72,6 +70,7 @@ function RiskMap (mapId, options) {
   // Create MapContainer
   const container = new MapContainer(mapId, containerOptions)
   const containerElement = container.containerElement
+  const resetButton = container.resetButton
   const closeInfoButton = container.closeInfoButton
   const openKeyButton = container.openKeyButton
   const closeKeyButton = container.closeKeyButton
@@ -111,38 +110,99 @@ function RiskMap (mapId, options) {
     scenarioElement.removeAttribute('aria-hidden')
   }
 
+  // Update url and replace history state
+  const replaceHistory = (key, value) => {
+    const data = { v: mapId, isBack: options.isBack, initialExt: state.initialExt }
+    const uri = addOrUpdateParameter(window.location.href, key, value)
+    const title = document.title
+    window.history.replaceState(data, title, uri)
+  }
+
+  // Compare two lonLat extent arrays and return true if they are different
+  const isNewExtent = (newExt) => {
+    // Check either lons or lats are the same
+    const isSameLon1 = newExt[0] < (state.initialExt[0] + 0.0001) && newExt[0] > (state.initialExt[0] - 0.0001)
+    const isSameLon2 = newExt[2] < (state.initialExt[2] + 0.0001) && newExt[2] > (state.initialExt[2] - 0.0001)
+    const isSameLat1 = newExt[1] < (state.initialExt[1] + 0.0001) && newExt[1] > (state.initialExt[1] - 0.0001)
+    const isSameLat2 = newExt[3] < (state.initialExt[3] + 0.0001) && newExt[3] > (state.initialExt[3] - 0.0001)
+    const isSameWidth = isSameLon1 && isSameLon2
+    const isSameHeight = isSameLat1 && isSameLat2
+    // Check extent is within original extent
+    const initialExtent = transformExtent(state.initialExt, 'EPSG:4326', 'EPSG:27700')
+    const newExtent = transformExtent(newExt, 'EPSG:4326', 'EPSG:27700')
+    const isNewWithinInitital = containsExtent(newExtent, initialExtent)
+    return !((isSameWidth || isSameHeight) && isNewWithinInitital)
+  }
+
   //
   // Setup
   //
 
   // Define map extent
-  // let extent
-  // if (getParameterByName('ext')) {
-  //   extent = getParameterByName('ext').split(',').map(Number)
-  // } else {
-  //   extent = getLonLatFromExtent(maps.extent)
-  // }
+  let extent
+  if (getParameterByName('ext')) {
+    extent = getParameterByName('ext').split(',').map(Number)
+  } else if (options.extent && options.extent.length) {
+    extent = options.extent.map(x => { return parseFloat(x.toFixed(6)) })
+  } else {
+    extent = getLonLatFromExtent(maps.extent)
+  }
 
   // Set map viewport
-  // setExtentFromLonLat(map, extent)
+  if (!getParameterByName('ext') && options.centre) {
+    container.map.getView().setCenter(transform(options.centre, 'EPSG:4326', 'EPSG:3857'))
+    container.map.getView().setZoom(options.zoom || 6)
+  } else {
+    setExtentFromLonLat(container.map, extent)
+  }
+
+  // Store extent for use with reset button
+  state.initialExt = window.history.state.initialExt || getLonLatFromExtent(container.map.getView().calculateExtent(container.map.getSize()))
 
   // Show layers
   road.setVisible(true)
-  surfaceWater.setVisible(true)
-  // riverSea.setVisible(true)
+  surfaceWater1.setVisible(true)
+  riverSea1.setVisible(true)
 
   // Centre map on bbox
-  // if (options.extent && options.extent.length) {
-  //   maps.setExtentFromLonLat(map, options.extent)
-  // }
+  if (options.extent && options.extent.length) {
+    maps.setExtentFromLonLat(map, options.extent)
+  }
 
   //
   // Events
   //
 
+  // Set key symbols, opacity, history and overlays on map pan or zoom (fires on map load aswell)
+  let historyTimer = null
+  container.map.addEventListener('moveend', (e) => {
+    // Listeners can remain after map has been removed
+    if (!container.map) return
+    // Timer used to stop 100 url replaces in 30 seconds limit
+    clearTimeout(historyTimer)
+    // Tasks dependent on a time delay
+    historyTimer = setTimeout(() => {
+      if (!container.map) return
+      // Update url (history state) to reflect new extent
+      const ext = getLonLatFromExtent(container.map.getView().calculateExtent(container.map.getSize()))
+      replaceHistory('ext', ext.join(','))
+      // Show reset button if extent has changed
+      if (isNewExtent(ext)) resetButton.removeAttribute('disabled')
+      // Fix margin issue
+      container.map.updateSize()
+    }, 350)
+  })
+
   // Show scenarios if map is clicked
   map.addEventListener('click', (e) => {
     showScenarios()
+  })
+
+  // Reset map extent on reset button click
+  resetButton.addEventListener('click', (e) => {
+    setExtentFromLonLat(container.map, state.initialExt)
+    resetButton.setAttribute('disabled', '')
+    viewport.focus()
   })
 
   // Handle all Risk Map specific key presses
@@ -213,6 +273,8 @@ maps.createRiskMap = (mapId, options = {}) => {
   // Build default uri
   let uri = window.location.href
   uri = addOrUpdateParameter(uri, 'v', mapId)
+  uri = addOrUpdateParameter(uri, 'lyr', options.layers || '')
+  uri = addOrUpdateParameter(uri, 'ext', options.extent || '')
 
   // Create map button
   const btnContainer = document.getElementById(mapId)

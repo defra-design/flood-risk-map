@@ -543,5 +543,9 @@
 
 // Layer blend modes
 .defra-map-vt-layer canvas {
-  mix-blend-mode: darken;
+  mix-blend-mode: darken;  
+}
+
+.defra-map-raster-canvas {
+  mix-blend-mode: multiply;
 }
