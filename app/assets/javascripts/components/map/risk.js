@@ -1,8 +1,12 @@
 'use strict'
-// This file represents the 5 day outlook used on the national page.
+
+// Flood risk map
 import { View } from 'ol'
 import { defaults as defaultInteractions } from 'ol/interaction'
 import { Control } from 'ol/control'
+import * as proj4 from 'proj4'
+import { register as registerProj4 } from 'ol/proj/proj4'
+
 
 const { addOrUpdateParameter, getParameterByName, forEach } = window.flood.utils
 const maps = window.flood.maps
@@ -10,27 +14,36 @@ const { setExtentFromLonLat, getLonLatFromExtent } = window.flood.maps
 const MapContainer = maps.MapContainer
 
 function RiskMap (mapId, options) {
+  // Proj4 defs
+  proj4.default.defs('EPSG:27700', '+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.06,0.15,0.247,0.842,-20.489 +units=m +no_defs')
+  registerProj4(proj4.default)
+
   // Scenario
   let scenario = 1
 
   // View
   const view = new View({
-    zoom: 8,
-    minZoom: 8,
-    maxZoom: 14,
-    center: maps.center,
-    extent: maps.extentLarge
+    projection: 'EPSG:27700',
+    resolutions: maps.tilegrid.getResolutions(),
+    zoom: 7,
+    minZoom: 0,
+    maxZoom: 9,
+    // extent: maps.extent27700,
+    // center: maps.center27700
+    extent: [ -238375.0, 0.0, 900000.0, 1376256.0 ],
+    center: [ 337297, 503695 ]
   })
 
   // Layers
-  const road = maps.layers.road()
+  const road = maps.layers.road27700()
+  const surfaceWaterDepthHigh = maps.layers.surfaceWaterDepthHigh()
 
   // Configure default interactions
   const interactions = defaultInteractions({
     pinchRotate: false
   })
 
-   // Create day control
+   // Create scenario control
   const scenarioElement = document.createElement('div')
   scenarioElement.id = 'map-scenarios'
   scenarioElement.className = 'defra-map-scenarios'
@@ -43,7 +56,7 @@ function RiskMap (mapId, options) {
   // Options to pass to the MapContainer constructor
   const containerOptions = {
     view: view,
-    layers: [road],
+    layers: [road, surfaceWaterDepthHigh],
     controls: [scenarioControl],
     queryParamKeys: ['v'],
     interactions: interactions,
@@ -73,14 +86,14 @@ function RiskMap (mapId, options) {
     console.log('setFeatureVisibility')
   }
 
-  // Set day control current day
+  // Set scenario
   const setScenarioButton = () => {
     forEach(document.querySelectorAll('.defra-map-scenario-button'), (button, i) => {
       button.setAttribute('aria-selected', i + 1 === scenario)
     })
   }
 
-  // Hide day control
+  // Hide scenario control
   const hideScenarios = () => {
     scenarioElement.style.display = 'none'
     scenarioElement.setAttribute('open', false)
@@ -88,7 +101,7 @@ function RiskMap (mapId, options) {
     scenarioElement.setAttribute('aria-hidden', true)
   }
 
-  // Show day control
+  // Show scenario control
   const showScenarios = () => {
     scenarioElement.style.display = 'block'
     scenarioElement.setAttribute('open', true)
@@ -101,23 +114,24 @@ function RiskMap (mapId, options) {
   //
 
   // Define map extent
-  let extent
-  if (getParameterByName('ext')) {
-    extent = getParameterByName('ext').split(',').map(Number)
-  } else {
-    extent = getLonLatFromExtent(maps.extent)
-  }
+  // let extent
+  // if (getParameterByName('ext')) {
+  //   extent = getParameterByName('ext').split(',').map(Number)
+  // } else {
+  //   extent = getLonLatFromExtent(maps.extent)
+  // }
 
   // Set map viewport
-  setExtentFromLonLat(map, extent)
+  // setExtentFromLonLat(map, extent)
 
   // Show layers
   road.setVisible(true)
+  surfaceWaterDepthHigh.setVisible(true)
 
   // Centre map on bbox
-  if (options.extent && options.extent.length) {
-    maps.setExtentFromLonLat(map, options.extent)
-  }
+  // if (options.extent && options.extent.length) {
+  //   maps.setExtentFromLonLat(map, options.extent)
+  // }
 
   //
   // Events

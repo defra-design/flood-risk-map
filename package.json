@@ -53,6 +53,7 @@
     "nunjucks": "^3.2.1",
     "ol": "^7.0.0",
     "portscanner": "^2.1.1",
+    "proj4": "^2.8.1",
     "require-dir": "^1.0.0",
     "sass": "^1.49.10",
     "sync-request": "^6.0.0",

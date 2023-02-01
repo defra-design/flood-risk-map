@@ -3,6 +3,7 @@
   Intialises the window.flood.maps object with extent and center
 */
 import { transform, transformExtent } from 'ol/proj'
+import TileGrid from 'ol/tilegrid/TileGrid'
 
 window.flood.maps = {
 
@@ -27,6 +28,15 @@ window.flood.maps = {
     -1.4758,
     52.9219
   ], 'EPSG:4326', 'EPSG:3857'),
+
+  // British national grid bounds
+  extent27700: [-238375.0, 0.0, 900000.0, 1376256.0],
+  centre27700: [337297, 503695],
+
+  tilegrid: new TileGrid({
+    resolutions: [ 896.0, 448.0, 224.0, 112.0, 56.0, 28.0, 14.0, 7.0, 3.5, 1.75 ],
+    origin: [ -238375.0, 1376256.0 ]
+  }),
 
   // Set a map extent from a array of lonLat's
   setExtentFromLonLat: (map, extent, padding = 0) => {
