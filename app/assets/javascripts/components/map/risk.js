@@ -36,7 +36,8 @@ function RiskMap (mapId, options) {
 
   // Layers
   const road = maps.layers.road27700()
-  const surfaceWaterDepthHigh = maps.layers.surfaceWaterDepthHigh()
+  const surfaceWater = maps.layers.surfaceWater()
+  const riverSea = maps.layers.riverSea()
 
   // Configure default interactions
   const interactions = defaultInteractions({
@@ -56,7 +57,8 @@ function RiskMap (mapId, options) {
   // Options to pass to the MapContainer constructor
   const containerOptions = {
     view: view,
-    layers: [road, surfaceWaterDepthHigh],
+    // layers: [road, riverSea, surfaceWater],
+    layers: [road, surfaceWater, riverSea],
     controls: [scenarioControl],
     queryParamKeys: ['v'],
     interactions: interactions,
@@ -126,7 +128,8 @@ function RiskMap (mapId, options) {
 
   // Show layers
   road.setVisible(true)
-  surfaceWaterDepthHigh.setVisible(true)
+  surfaceWater.setVisible(true)
+  // riverSea.setVisible(true)
 
   // Centre map on bbox
   // if (options.extent && options.extent.length) {
