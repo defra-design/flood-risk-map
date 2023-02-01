@@ -38,11 +38,16 @@ window.flood.maps.layers = {
       '[{"id":4,"name":"RoFSW_Extent_1in100","source":{"type":"mapLayer","mapLayerId":4},"drawingInfo":{"renderer":{"type":"simple","symbol":{"color":[102,131,174,255],"outline":{"color":[0,0,0,0],"width":0.4,"type":"esriSLS","style":"esriSLSNull"},"type":"esriSFS","style":"esriSFSSolid"}}}}]',
       '[{"id":6,"name":"RoFSW_Extent_1in1000","source":{"type":"mapLayer","mapLayerId":6},"drawingInfo":{"renderer":{"type":"simple","symbol":{"color":[102,131,174,255],"outline":{"color":[0,0,0,0],"width":0.4,"type":"esriSLS","style":"esriSLSNull"},"type":"esriSFS","style":"esriSFSSolid"}}}}]'
     ]
+    const bands = [
+      { d: 'RoFSWDepth1in30', v: 'RoFSWSpeed1in30' },
+      { d: 'RoFSWDepth1in100', v: 'RoFSWSpeed1in100' },
+      { d: 'RoFSWDepth1in1000', v: 'RoFSWSpeed1in1000' }
+    ]
     return new TileLayer({
       ref: `surfaceWater${liklihood}${band}`,
       className: 'defra-map-raster-canvas',
       source: new TileArcGISRest({
-        url: 'https://environment.data.gov.uk/arcgis/rest/services/EA/RiskOfFloodingFromSurfaceWaterBasic/MapServer',
+        url: `https://environment.data.gov.uk/arcgis/rest/services/EA/${ band ? bands[liklihood-1][band] : 'RiskOfFloodingFromSurfaceWaterBasic'}/MapServer`,
         projection: 'EPSG:27700',
         params: {
           'TRANSPARENT': true,
