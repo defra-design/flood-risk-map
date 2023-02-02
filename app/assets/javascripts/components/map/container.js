@@ -46,7 +46,7 @@ maps.MapContainer = function MapContainer (mapId, options) {
   // Create the map container element
   const containerElement = document.createElement('div')
   containerElement.id = mapId
-  containerElement.className = 'defra-map'
+  containerElement.className = `defra-map ${options.class}`
   containerElement.setAttribute('role', 'dialog')
   containerElement.setAttribute('open', true)
   containerElement.setAttribute('aria-modal', true)

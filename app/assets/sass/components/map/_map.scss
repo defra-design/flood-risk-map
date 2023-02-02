@@ -428,6 +428,12 @@
   left: 0px;
   bottom: 0px;
 }
+.defra-map--risk .defra-map-os-logo {
+  bottom: 85px;
+  @include mq ($from: tablet) {
+    bottom: 95px;
+  }
+}
 
 // Map controls - Base map
 .defra-map-background {

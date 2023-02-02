@@ -104,7 +104,8 @@ function RiskMap (mapId, options) {
     title: options.title,
     heading: options.heading,
     keyTemplate: 'key-risk.html',
-    isBack: options.isBack
+    isBack: options.isBack,
+    class: 'defra-map--risk'
   }
 
   // Create MapContainer
