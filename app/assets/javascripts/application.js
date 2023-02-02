@@ -21,7 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (document.getElementById('risk-map')) {
     window.flood.maps.createRiskMap('risk-map', {
       btnText: 'View map showing flood risk areas',
-      btnClasses: 'defra-button-secondary defra-button-secondary--icon'
+      btnClasses: 'defra-button-secondary defra-button-secondary--icon',
+      layer: 'ae1' // 'ae1,ae2,ae3,re1,re2,re3,sd1,sd2,sd3,ss1,ss2,ss3'
     })
   }
 })

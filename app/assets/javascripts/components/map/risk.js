@@ -13,12 +13,11 @@ const { setExtentFromLonLat, getLonLatFromExtent } = window.flood.maps
 const MapContainer = maps.MapContainer
 
 function RiskMap (mapId, options) {
-  // Scenario
-  let scenario = 1
-
   // State object
   const state = {
-    initialExt: []
+    initialExt: [],
+    scenario: 1,
+    lyrCode: 'ae'
   }
 
   // View
@@ -34,25 +33,57 @@ function RiskMap (mapId, options) {
 
   // Layers
   const road = maps.layers.road()
-  const surfaceWater1 = maps.layers.surfaceWater(1, null)
-  const surfaceWater1d = maps.layers.surfaceWater(1, 'd')
-  const surfaceWater1v = maps.layers.surfaceWater(1, 'v')
-  const surfaceWater2 = maps.layers.surfaceWater(2, null)
-  const surfaceWater2d = maps.layers.surfaceWater(2, 'd')
-  const surfaceWater2v = maps.layers.surfaceWater(2, 'v')
-  const surfaceWater3 = maps.layers.surfaceWater(3, null)
-  const surfaceWater3d = maps.layers.surfaceWater(3, 'd')
-  const surfaceWater3v = maps.layers.surfaceWater(3, 'v')
+  const surfaceWater1 = maps.layers.surfaceWater(1)
+  const surfaceWater1d = maps.layers.surfaceWaterDepth(1)
+  const surfaceWater1s = maps.layers.surfaceWaterSpeed(1)
+  const surfaceWater2 = maps.layers.surfaceWater(2)
+  const surfaceWater2d = maps.layers.surfaceWaterDepth(2)
+  const surfaceWater2s = maps.layers.surfaceWaterSpeed(2)
+  const surfaceWater3 = maps.layers.surfaceWater(3)
+  const surfaceWater3d = maps.layers.surfaceWaterDepth(3)
+  const surfaceWater3s = maps.layers.surfaceWaterSpeed(3)
   const riverSea1 = maps.layers.riverSea(1)
   const riverSea2 = maps.layers.riverSea(2)
   const riverSea3 = maps.layers.riverSea(3)
+
+  const baseLayers = [
+    road
+  ]
+
+  const dataLayers = [
+    surfaceWater1,
+    surfaceWater1d,
+    surfaceWater1s,
+    surfaceWater2,
+    surfaceWater2d,
+    surfaceWater2s,
+    surfaceWater3,
+    surfaceWater3d,
+    surfaceWater3s,
+    riverSea1,
+    riverSea2,
+    riverSea3
+  ]
+
+  const layers = baseLayers.concat(dataLayers)
 
   // Configure default interactions
   const interactions = defaultInteractions({
     pinchRotate: false
   })
 
-   // Create scenario control
+  // Add OS copyright logo
+  const osLogoImage = document.createElement('img')
+  osLogoImage.className = 'defra-map-os-logo'
+  osLogoImage.setAttribute('alt', 'Ordnance Survey logo')
+  osLogoImage.src = '/public/images/map-os-logo.png'
+  osLogoImage.width = 90
+  osLogoImage.height = 24
+  const osLogo = new Control({
+    element: osLogoImage
+  })
+
+  // Create scenario control
   const scenarioElement = document.createElement('div')
   scenarioElement.id = 'map-scenarios'
   scenarioElement.className = 'defra-map-scenarios'
@@ -65,23 +96,8 @@ function RiskMap (mapId, options) {
   // Options to pass to the MapContainer constructor
   const containerOptions = {
     view: view,
-    // layers: [road, riverSea, surfaceWater],
-    layers: [
-      road,
-      surfaceWater1,
-      surfaceWater1d,
-      surfaceWater1v,
-      surfaceWater2,
-      surfaceWater2d,
-      surfaceWater2v,
-      surfaceWater3,
-      surfaceWater3d,
-      surfaceWater3v,
-      riverSea1,
-      riverSea2,
-      riverSea3
-    ],
-    controls: [scenarioControl],
+    layers: layers,
+    controls: [osLogo, scenarioControl],
     queryParamKeys: ['v'],
     interactions: interactions,
     originalTitle: options.originalTitle,
@@ -106,15 +122,10 @@ function RiskMap (mapId, options) {
   // Private methods
   //
 
-  // Set feature visiblity
-  const setFeatureVisibility = () => {
-    console.log('setFeatureVisibility')
-  }
-
   // Set scenario
   const setScenarioButton = () => {
     forEach(document.querySelectorAll('.defra-map-scenario-button'), (button, i) => {
-      button.setAttribute('aria-selected', i + 1 === scenario)
+      button.setAttribute('aria-selected', i + 1 === state.scenario)
     })
   }
 
@@ -158,6 +169,15 @@ function RiskMap (mapId, options) {
     return !((isSameWidth || isSameHeight) && isNewWithinInitital)
   }
 
+  // Show or hide layers
+  const toggleLayerVisibility = (code) => {
+    dataLayers.forEach(layer => {
+      const isVisible = layer.get('layerCodes').includes(code)
+      layer.setVisible(isVisible)
+    })
+    osLogoImage.style.display = 'block'
+  }
+
   //
   // Setup
   //
@@ -183,14 +203,16 @@ function RiskMap (mapId, options) {
   // Store extent for use with reset button
   state.initialExt = window.history.state.initialExt || getLonLatFromExtent(container.map.getView().calculateExtent(container.map.getSize()))
 
-  // Show layers
-  road.setVisible(true)
-  surfaceWater1.setVisible(true)
-  riverSea1.setVisible(true)
-
-  // Centre map on bbox
-  if (options.extent && options.extent.length) {
-    maps.setExtentFromLonLat(map, options.extent)
+  // Set layers, key and scenario buttons from querystring
+  if (getParameterByName('lyr')) {
+    const code = getParameterByName('lyr')
+    toggleLayerVisibility(code)
+    // Need some validation
+    state.scenario = parseInt(code.charAt(2), 10)
+    state.lyrCode = code.slice(0, 2)
+    const radios = document.querySelectorAll('.defra-map-key input[type=radio]')
+    forEach(radios, radio => radio.checked = state.lyrCode === radio.value)
+    setScenarioButton()
   }
 
   //
@@ -257,22 +279,27 @@ function RiskMap (mapId, options) {
     hideScenarios()
   })
 
+  // Key radio button
+  keyElement.addEventListener('click', (e) => {
+    if (e.target.nodeName === 'INPUT' && e.target.type === 'radio') {
+      e.stopPropagation()
+      state.lyrCode = e.target.value
+      const code = state.lyrCode.concat(state.scenario)
+      toggleLayerVisibility(code)
+      replaceHistory('lyr', code)
+    }
+  })
+
   // Scenario button
   forEach(document.querySelectorAll('.defra-map-scenario-button'), (button) => {
     button.addEventListener('click', (e) => {
       e.currentTarget.focus()
-      scenario = parseInt(e.currentTarget.getAttribute('data-scenario'), 10)
-      setFeatureVisibility()
+      state.scenario = parseInt(e.currentTarget.getAttribute('data-scenario'), 10)
+      const code = state.lyrCode.concat(state.scenario)
+      toggleLayerVisibility(code)
       setScenarioButton()
+      replaceHistory('lyr', code)
     })
-  })
-
-  // Key checkbox click
-  keyElement.addEventListener('click', (e) => {
-    if (e.target.nodeName === 'INPUT') {
-      state.visibleRiskLevels = [...keyElement.querySelectorAll('input:checked')].map(e => parseInt(e.getAttribute('data-risk-level'), 10))
-      setFeatureVisibility()
-    }
   })
 }
 
@@ -297,7 +324,7 @@ maps.createRiskMap = (mapId, options = {}) => {
   // Build default uri
   let uri = window.location.href
   uri = addOrUpdateParameter(uri, 'v', mapId)
-  uri = addOrUpdateParameter(uri, 'lyr', options.layers || '')
+  uri = addOrUpdateParameter(uri, 'lyr', options.layer || '')
   uri = addOrUpdateParameter(uri, 'ext', options.extent || '')
 
   // Create map button
