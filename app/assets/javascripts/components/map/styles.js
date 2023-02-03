@@ -65,7 +65,7 @@ window.flood.maps.styles = {
     const scenario = window.flood.maps.scenario
     const heightProperties = ['depth_30', 'depth_100', 'depth_1000']
     const speedProperties = ['flow_30', 'flow_100', 'flow_1000']
-    const height = '23.55' //feature.get(heightProperties[scenario - 1])
+    const height = feature.get(heightProperties[scenario - 1])
     const speed = feature.get(speedProperties[scenario - 1])
     return [
       createSymbol({ offset: [0, 600], zIndex: 2 }),
