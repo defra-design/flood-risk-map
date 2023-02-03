@@ -45,6 +45,7 @@ function RiskMap (mapId, options) {
   const riverSea1 = maps.layers.riverSea(1)
   const riverSea2 = maps.layers.riverSea(2)
   const riverSea3 = maps.layers.riverSea(3)
+  const stations = maps.layers.stations()
 
   const baseLayers = [
     road
@@ -62,7 +63,8 @@ function RiskMap (mapId, options) {
     surfaceWater3s,
     riverSea1,
     riverSea2,
-    riverSea3
+    riverSea3,
+    stations
   ]
 
   const layers = baseLayers.concat(dataLayers)
@@ -128,6 +130,10 @@ function RiskMap (mapId, options) {
     forEach(document.querySelectorAll('.defra-map-scenario-button'), (button, i) => {
       button.setAttribute('aria-selected', i + 1 === state.scenario)
     })
+    // Re-apply style to stations layer when scenario changes
+    if (stations.getVisible()) {
+      stations.setStyle(stations.getStyle())
+    }
   }
 
   // Hide scenario control
@@ -207,9 +213,11 @@ function RiskMap (mapId, options) {
   // Set layers, key and scenario buttons from querystring
   if (getParameterByName('lyr')) {
     const code = getParameterByName('lyr')
-    toggleLayerVisibility(code)
     // Need some validation
     state.scenario = parseInt(code.charAt(2), 10)
+    // Global referecne for usein style function
+    maps.scenario = state.scenario
+    toggleLayerVisibility(code)
     state.lyrCode = code.slice(0, 2)
     const radios = document.querySelectorAll('.defra-map-key input[type=radio]')
     forEach(radios, radio => radio.checked = state.lyrCode === radio.value)
@@ -296,6 +304,8 @@ function RiskMap (mapId, options) {
     button.addEventListener('click', (e) => {
       e.currentTarget.focus()
       state.scenario = parseInt(e.currentTarget.getAttribute('data-scenario'), 10)
+      // Global referecne for use in style function
+      maps.scenario = state.scenario
       const code = state.lyrCode.concat(state.scenario)
       toggleLayerVisibility(code)
       setScenarioButton()

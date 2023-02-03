@@ -2,9 +2,10 @@
 /*
 Initialises the window.flood.maps layers
 */
+import { Vector as VectorLayer } from 'ol/layer'
 import TileLayer from 'ol/layer/WebGLTile'
-import { TileArcGISRest } from 'ol/source'
-import { XYZ } from 'ol/source'
+import { XYZ, TileArcGISRest, Vector as VectorSource } from 'ol/source'
+import { GeoJSON } from 'ol/format'
 const osApiKey = process.env.OS_API_KEY
 
 //
@@ -113,5 +114,25 @@ window.flood.maps.layers = {
       visible: false,
       zIndex: 1
     })
-  }
+  },
+
+  //
+  // Vector layers
+  //
+
+  stations: () => {
+    return new VectorLayer({
+      ref: 'stations',
+      layerCodes: 're1,re2,re3',
+      source: new VectorSource({
+        format: new GeoJSON(),
+        projection: 'EPSG:3857',
+        url: '/service/geojson/stations'
+      }),
+      minZoom: 7,
+      style: window.flood.maps.styles.stations,
+      visible: false,
+      zIndex: 2
+    })
+  },
 }

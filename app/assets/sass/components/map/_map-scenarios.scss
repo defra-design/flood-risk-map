@@ -20,6 +20,7 @@
 .defra-map-scenario-button {
   flex: 1 1 auto;
   @include govuk-font($size: 14);
+  font-size: 14px;
   width: 33.33%;
   border: 0px;
   border-bottom: 7px solid transparent;
@@ -35,6 +36,7 @@
   strong {
     display: inline-block;
     @include govuk-font($size: 19, $weight: bold);
+    font-size: 19px;
     text-decoration: underline;
     margin-bottom: 2px;
     pointer-events: none;

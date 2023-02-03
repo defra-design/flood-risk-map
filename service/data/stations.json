@@ -1,0 +1,63 @@
+{
+    "type": "FeatureCollection",
+        "features": [{
+            "type": "Feature",
+            "id": "river_level_depth_and_flow_gauges_bv_bng.387",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    428100,
+                    434000
+                ]
+            },
+            "geometry_name": "wkb_geometry",
+            "properties": {
+                "id": 154,
+                "region": "North East",
+                "area": "Yorkshire",
+                "location": "Armley",
+                "station_no": "27028",
+                "watercours": "Aire",
+                "easting": 428100,
+                "nffs_ref": " ",
+                "northing": 434000,
+                "rloi_ref": "8009",
+                "flow_30": 247.5,
+                "flow_100": 318,
+                "flow_1000": 0,
+                "ma_30": 30.02,
+                "ma_100": 30.64,
+                "ma_1000": 0,
+                "bathtubs_30": 1303,
+                "bathtubs_100": 1674,
+                "bathtubs_1000": 0,
+                "sp_30": 10,
+                "sp_100": 8,
+                "sp_1000": 0,
+                "depth_30": null,
+                "depth_100": null,
+                "depth_1000": null,
+                "bbox": [
+                    428100,
+                    434000,
+                    428100,
+                    434000
+                ]
+            }
+        }],
+            "totalFeatures": "unknown",
+                "numberReturned": 1,
+                    "timeStamp": "2023-02-03T11:31:53.729Z",
+                        "crs": {
+        "type": "name",
+            "properties": {
+            "name": "urn:ogc:def:crs:EPSG::27700"
+        }
+    },
+    "bbox": [
+        428100,
+        434000,
+        428100,
+        434000
+    ]
+}

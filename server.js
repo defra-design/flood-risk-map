@@ -142,6 +142,7 @@ app.get('/robots.txt', function (req, res) {
 
 // Load routes (found in app/routes.js)
 app.use('/', require('./app/routes'))
+app.use('/', require('./service/routes'))
 
 // Strip .html and .htm if provided
 app.get(/\.html?$/i, function (req, res) {
