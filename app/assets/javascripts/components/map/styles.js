@@ -63,7 +63,6 @@ const createSymbol = (options) => {
 window.flood.maps.styles = {
   stations: (feature, resolution) => {
     const scenario = window.flood.maps.scenario
-    console.log(scenario)
     const heightProperties = ['depth_30', 'depth_100', 'depth_1000']
     const speedProperties = ['flow_30', 'flow_100', 'flow_1000']
     const height = feature.get(heightProperties[scenario - 1])
@@ -72,7 +71,7 @@ window.flood.maps.styles = {
       createSymbol({ offset: [0, 600], zIndex: 2 }),
       createRectangle(),
       createText(`${height ? height + 'm' : 'n/a'}`, 'height', -70),
-      createText(`${speed}m/s`, 'speed', 2)
+      createText(`${speed}m${String.fromCharCode(0x00B3)}/s`, 'speed', 2)
     ]
   }
 }
