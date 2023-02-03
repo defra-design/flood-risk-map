@@ -6,7 +6,7 @@ import { Style, Icon, Fill, Stroke, Text, RegularShape } from 'ol/style'
 
 const createRectangle = () => {
   var canvas = document.createElement('canvas')
-  canvas.width = 330
+  canvas.width = 340
   canvas.height = 120
   var ctx = canvas.getContext('2d', { willReadFrequently: true })
   ctx.fillStyle = 'white'
@@ -65,13 +65,13 @@ window.flood.maps.styles = {
     const scenario = window.flood.maps.scenario
     const heightProperties = ['depth_30', 'depth_100', 'depth_1000']
     const speedProperties = ['flow_30', 'flow_100', 'flow_1000']
-    const height = feature.get(heightProperties[scenario - 1])
+    const height = '23.55' //feature.get(heightProperties[scenario - 1])
     const speed = feature.get(speedProperties[scenario - 1])
     return [
       createSymbol({ offset: [0, 600], zIndex: 2 }),
       createRectangle(),
-      createText(`${height ? height + 'm' : 'n/a'}`, 'height', -70),
-      createText(`${speed}m${String.fromCharCode(0x00B3)}/s`, 'speed', 2)
+      createText(`${height ? height + 'm' : 'n/a'}`, 'height', -72),
+      createText(`${speed}m${String.fromCharCode(0x00B3)}/s`, 'flow rate', -2)
     ]
   }
 }
