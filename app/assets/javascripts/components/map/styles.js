@@ -2,61 +2,58 @@
 /*
 Sets up the window.flood.maps styles objects
 */
-import { Style, Icon, Fill, Stroke, Text, RegularShape } from 'ol/style'
+import { Style, Icon, Fill, Stroke, Text, Circle } from 'ol/style'
 
-const createRectangle = () => {
-  var canvas = document.createElement('canvas')
-  canvas.width = 340
-  canvas.height = 120
+const overlay = (() => {
+  const canvas = document.createElement('canvas')
+  canvas.width = 210
+  canvas.height = 260
   var ctx = canvas.getContext('2d', { willReadFrequently: true })
+  ctx.beginPath()
+  ctx.moveTo(0,0)
+  ctx.lineTo(210,0)
+  ctx.lineTo(210,200)
+  ctx.lineTo(120, 200)
+  ctx.lineTo(105, 230)
+  ctx.lineTo(90, 200)
+  ctx.lineTo(0,200)
   ctx.fillStyle = 'white'
-  // ctx.strokeStyle = '#0b0c0c'
-  // ctx.strokeRect(2, 2, canvas.width - 4, canvas.height - 4)
-  ctx.fillRect(0, 0, canvas.width, canvas.height)
+  ctx.fill()
+  ctx.beginPath()
+  ctx.arc(105, 248, 12, 0, 2 * Math.PI, false)
+  // ctx.strokeStyle = 'white'
+  // ctx.lineWidth = 2
+  // ctx.stroke()
+  ctx.fillStyle = '#0b0c0c'
+  ctx.fill()
+  return canvas
+})()
+
+
+const createOverlay = () => {
   return new Style({
     image: new Icon({
-      img: canvas,
-      imgSize: [canvas.width, canvas.height],
+      img: overlay,
+      imgSize: [overlay.width, overlay.height],
       anchorYUnits: 'pixels',
-      anchor: [0.5, 160],
+      anchor: [0.5, 260], // Height minus half locator height
       offset: [0, 0],
       scale: 0.5,
     })
   })
 }
 
-const createText = (value, units, offsetX) => {
+const createText = (units, value, offsetY) => {
   const fontLarge = 'bold 16px GDS Transport, Arial, sans-serif'
   const fontSmall = 'normal 14px GDS Transport, Arial, sans-serif'
-  const text = [value, fontLarge, '\n', '', units, fontSmall]
+  const text = [units, fontSmall, '\n', '', value, fontLarge]
   return new Style({
     text: new Text({
       text: text,
       textAlign: 'left',
-      offsetY: -48,
-      offsetX: offsetX
+      offsetY: offsetY,
+      offsetX: -40
     })
-  })
-}
-
-const createSymbol = (options) => {
-  const defaults = {
-    size: [100, 100],
-    anchor: [0.5, 0.5],
-    offset: [0, 0],
-    scale: 0.5,
-    zIndex: 1
-  }
-  options = Object.assign({}, defaults, options)
-  return new Style({
-    image: new Icon({
-      src: '/public/images/map-symbols.png',
-      size: options.size,
-      anchor: options.anchor,
-      offset: options.offset,
-      scale: options.scale
-    }),
-    zIndex: options.zIndex
   })
 }
 
@@ -68,10 +65,9 @@ window.flood.maps.styles = {
     const height = feature.get(heightProperties[scenario - 1])
     const speed = feature.get(speedProperties[scenario - 1])
     return [
-      createSymbol({ offset: [0, 600], zIndex: 2 }),
-      createRectangle(),
-      createText(`${height ? height + 'm' : 'n/a'}`, 'height', -72),
-      createText(`${speed}m${String.fromCharCode(0x00B3)}/s`, 'flow rate', -2)
+      createOverlay(),
+      createText('height up to', `${height ? height + 'm' : 'n/a'}`, -100),
+      createText('flow up to', `${speed}m${String.fromCharCode(0x00B3)}/s`, -58)
     ]
   }
 }
