@@ -1,6 +1,7 @@
 {
     "type": "FeatureCollection",
-        "features": [{
+    "features": [
+        {
             "type": "Feature",
             "id": "river_level_depth_and_flow_gauges_bv_bng.387",
             "geometry": {
@@ -44,13 +45,59 @@
                     434000
                 ]
             }
-        }],
-            "totalFeatures": "unknown",
-                "numberReturned": 1,
-                    "timeStamp": "2023-02-03T11:31:53.729Z",
-                        "crs": {
-        "type": "name",
+        },
+        {
+            "type": "Feature",
+            "id": "river_level_depth_and_flow_gauges_bv_bng.398",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    438100,
+                    428200
+                ]
+            },
+            "geometry_name": "wkb_geometry",
             "properties": {
+                "id": 167,
+                "region": "North East",
+                "area": "Yorkshire",
+                "location": "Lemonroyd Weir",
+                "station_no": "27080",
+                "watercours": "Aire",
+                "easting": 438100,
+                "nffs_ref": " ",
+                "northing": 428200,
+                "rloi_ref": " ",
+                "flow_30": 299.5,
+                "flow_100": 395,
+                "flow_1000": 0,
+                "ma_30": 0,
+                "ma_100": 0,
+                "ma_1000": 0,
+                "bathtubs_30": 1576,
+                "bathtubs_100": 2079,
+                "bathtubs_1000": 0,
+                "sp_30": 8,
+                "sp_100": 6,
+                "sp_1000": 0,
+                "depth_30": null,
+                "depth_100": null,
+                "depth_1000": null,
+                "bbox": [
+                    438100,
+                    428200,
+                    438100,
+                    428200
+                ]
+            }
+        }
+    ],
+    "totalFeatures": "unknown",
+    "numberReturned": 1,
+    "timeStamp": "2023-02-03T11:31:53.729Z",
+    "crs": {
+        "type": "name",
+        "properties": {
             "name": "urn:ogc:def:crs:EPSG::27700"
         }
     },
