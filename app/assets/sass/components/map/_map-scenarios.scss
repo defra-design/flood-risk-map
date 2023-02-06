@@ -37,6 +37,7 @@
     display: inline-block;
     @include govuk-font($size: 19, $weight: bold);
     font-size: 19px;
+    line-height: 1.31579;
     text-decoration: underline;
     margin-bottom: 2px;
     pointer-events: none;
@@ -44,6 +45,7 @@
   span {
     display: block;
     pointer-events: none;
+    line-height: 1.42857;
   }
   &[aria-selected=true] {
     background-color: white;
