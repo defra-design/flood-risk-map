@@ -1,11 +1,11 @@
 // Day control  
 .defra-map-scenarios {
   width:100%;
-  @media screen and (min-width: 546px) {
+  @media screen and (min-width: 938px) {
     position:absolute;
     bottom:0px;
     left:0px;
-    max-width:475px;
+    max-width:575px;
   }
   padding-top:10px;
   overflow-x: auto;
@@ -21,7 +21,6 @@
   flex: 1 1 auto;
   @include govuk-font($size: 14);
   font-size: 14px;
-  width: 33.33%;
   border: 0px;
   border-bottom: 7px solid transparent;
   margin: 0px;
@@ -70,5 +69,13 @@
     -webkit-box-shadow: 0 -2px $govuk-focus-colour,0 4px $govuk-focus-text-colour;
     box-shadow: 0 -2px $govuk-focus-colour,0 4px $govuk-focus-text-colour;
     text-decoration: none;
+  }
+}
+.defra-map--risk .defra-map-os-logo {
+  float: left;
+  position: relative;
+  bottom: -20px;
+  @media screen and (min-width: 938px) {
+    bottom: 74px;
   }
 }

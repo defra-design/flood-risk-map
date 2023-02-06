@@ -14,7 +14,7 @@ const overlay1 = (() => {
   ctx.lineTo(210,0)
   ctx.lineTo(210,116)
   ctx.lineTo(120, 116)
-  ctx.lineTo(105, 146)
+  ctx.lineTo(105, 142)
   ctx.lineTo(90, 116)
   ctx.lineTo(0,116)
   ctx.fillStyle = 'white'
@@ -39,7 +39,7 @@ const overlay2 = (() => {
   ctx.lineTo(210,0)
   ctx.lineTo(210,200)
   ctx.lineTo(120, 200)
-  ctx.lineTo(105, 230)
+  ctx.lineTo(105, 226)
   ctx.lineTo(90, 200)
   ctx.lineTo(0,200)
   ctx.fillStyle = 'white'

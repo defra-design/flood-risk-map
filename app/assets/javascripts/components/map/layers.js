@@ -121,6 +121,27 @@ window.flood.maps.layers = {
     })
   },
 
+  reservoirRiver: (state) => {
+    const fillColour = state === 'DryDay' ? darkBlue : lightBlue
+    return new TileLayer({
+      ref: `reservoirRiver${state}`,
+      className: 'defra-map-raster-canvas',
+      layerCodes: 'rr4',
+      source: new TileArcGISRest({
+        url: `https://environment.data.gov.uk/arcgis/rest/services/EA/ReservoirFloodExtents${state}/MapServer`,
+        projection: 'EPSG:27700',
+        params: {
+          'TRANSPARENT': true,
+          'FORMAT': 'GIF',
+          'dynamicLayers': `[{"id":0,"source":{"type":"mapLayer","mapLayerId":0},"drawingInfo":{"renderer":{"type":"simple","symbol":{"color":[${fillColour}],"outline":{"width":0,"type":"esriSLS"},"type":"esriSFS","style":"esriSFSSolid"}}}}]`
+        }
+      }),
+      minZoom: 8,
+      visible: false,
+      zIndex: state === 'DryDay' ? 2 : 1
+    })
+  },
+
   //
   // Vector layers
   //

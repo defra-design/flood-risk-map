@@ -45,6 +45,8 @@ function RiskMap (mapId, options) {
   const riverSea1 = maps.layers.riverSea(1)
   const riverSea2 = maps.layers.riverSea(2)
   const riverSea3 = maps.layers.riverSea(3)
+  const reservoirRiverDryDay = maps.layers.reservoirRiver('DryDay')
+  const reservoirRiverWetDay = maps.layers.reservoirRiver('WetDay')
   const stations = maps.layers.stations()
 
   const baseLayers = [
@@ -64,6 +66,8 @@ function RiskMap (mapId, options) {
     riverSea1,
     riverSea2,
     riverSea3,
+    reservoirRiverWetDay,
+    reservoirRiverDryDay,
     stations
   ]
 
@@ -152,6 +156,11 @@ function RiskMap (mapId, options) {
     scenarioElement.removeAttribute('aria-hidden')
   }
 
+  // Show key content
+  const showKeyContent = () => {
+    console.log(state.scenario)
+  }
+
   // Update url and replace history state
   const replaceHistory = (key, value) => {
     const data = { v: mapId, isBack: options.isBack, initialExt: state.initialExt }
@@ -178,6 +187,7 @@ function RiskMap (mapId, options) {
 
   // Show or hide layers
   const toggleLayerVisibility = (code) => {
+    // Toggle map layers
     dataLayers.forEach(layer => {
       const isVisible = layer.get('layerCodes').includes(code)
       layer.setVisible(isVisible)
@@ -306,8 +316,9 @@ function RiskMap (mapId, options) {
       state.scenario = parseInt(e.currentTarget.getAttribute('data-scenario'), 10)
       // Global referecne for use in style function
       maps.scenario = state.scenario
-      const code = state.lyrCode.concat(state.scenario)
+      const code = state.scenario === 4 ? 'rr4' : state.lyrCode.concat(state.scenario)
       toggleLayerVisibility(code)
+      showKeyContent()
       setScenarioButton()
       replaceHistory('lyr', code)
     })
