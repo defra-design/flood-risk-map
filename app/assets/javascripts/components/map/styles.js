@@ -91,8 +91,8 @@ window.flood.maps.styles = {
     const height = feature.get(heightProperties[scenario - 1])
     const speed = feature.get(speedProperties[scenario - 1])
     const styles = [ createOverlay(!!height) ]
-    if (height) styles.push(createText('height up to', `${height ? height + 'm' : 'n/a'}`, -100))
-    styles.push(createText('flow up to', `${speed}m${String.fromCharCode(0x00B3)}/s`, -58))
+    if (height) styles.push(createText('Height up to', `${height ? height + 'm' : 'n/a'}`, -100))
+    styles.push(createText('Flow up to', `${speed}m${String.fromCharCode(0x00B3)}/s`, -58))
     return styles
   }
 }
