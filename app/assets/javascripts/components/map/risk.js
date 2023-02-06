@@ -144,9 +144,10 @@ function RiskMap (mapId, options) {
   const setKeyContent = () => {
     // Toggle radio checked states
     const radios = document.querySelectorAll('.defra-map-key input[type=radio]')
-    forEach(radios, radio => radio.checked = state.lyrCode === radio.value)
+    forEach(radios, r => r.checked = state.lyrCode === r.value)
     // Show scenario specific content
-
+    const sections = document.querySelectorAll('.defra-map-key [data-scenario]')
+    forEach(sections, s => s.style.display = s.getAttribute('data-scenario').includes(state.scenario) ? 'block' : 'none')
   }
 
   // Hide scenario control

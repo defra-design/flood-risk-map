@@ -31,9 +31,14 @@
   display:block;
   margin:0 5px;
   padding:0 10px;
-  label {
-    @include govuk-font($size: 16);
+  @include govuk-font($size: 16);
+  &-container {
+    margin-top: -2px;
+    padding: 11px 15px 10px 35px;
   }
+}
+.defra-map-key label {
+  @include govuk-font($size: 16);
 }
 .defra-map-key__item:first-of-type {
   padding-top:10px;
