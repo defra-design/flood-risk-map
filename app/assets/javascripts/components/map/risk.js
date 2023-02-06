@@ -140,6 +140,15 @@ function RiskMap (mapId, options) {
     }
   }
 
+  // Set radios and checkboxes
+  const setKeyContent = () => {
+    // Toggle radio checked states
+    const radios = document.querySelectorAll('.defra-map-key input[type=radio]')
+    forEach(radios, radio => radio.checked = state.lyrCode === radio.value)
+    // Show scenario specific content
+
+  }
+
   // Hide scenario control
   const hideScenarios = () => {
     scenarioElement.style.display = 'none'
@@ -229,8 +238,7 @@ function RiskMap (mapId, options) {
     maps.scenario = state.scenario
     toggleLayerVisibility(code)
     state.lyrCode = code.slice(0, 2)
-    const radios = document.querySelectorAll('.defra-map-key input[type=radio]')
-    forEach(radios, radio => radio.checked = state.lyrCode === radio.value)
+    setKeyContent()
     setScenarioButton()
   }
 
@@ -303,8 +311,11 @@ function RiskMap (mapId, options) {
     if (e.target.nodeName === 'INPUT' && e.target.type === 'radio') {
       e.stopPropagation()
       state.lyrCode = e.target.value
+      // Overide scenario if layer not reservoirs
+      state.scenario = state.lyrCode === 'rr' || state.scenario === 4 ? 1 : state.scenario
       const code = state.lyrCode.concat(state.scenario)
       toggleLayerVisibility(code)
+      setScenarioButton()
       replaceHistory('lyr', code)
     }
   })
@@ -314,11 +325,13 @@ function RiskMap (mapId, options) {
     button.addEventListener('click', (e) => {
       e.currentTarget.focus()
       state.scenario = parseInt(e.currentTarget.getAttribute('data-scenario'), 10)
-      // Global referecne for use in style function
+      // Global reference for use in style function
       maps.scenario = state.scenario
-      const code = state.scenario === 4 ? 'rr4' : state.lyrCode.concat(state.scenario)
+      // Overide layer code if scenario 4
+      state.lyrCode = state.scenario === 4 ? 'rr' : state.lyrCode === 'rr' ? 'ae' : state.lyrCode
+      setKeyContent()
+      const code = state.lyrCode.concat(state.scenario)
       toggleLayerVisibility(code)
-      showKeyContent()
       setScenarioButton()
       replaceHistory('lyr', code)
     })
