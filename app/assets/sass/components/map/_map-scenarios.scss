@@ -62,7 +62,7 @@
   &[aria-selected=true] {
     border-bottom:7px solid govuk-colour('blue');
   }
-  &:focus strong {
+  &:focus[keyboard-focus] strong {
     outline: 3px solid transparent;
     color: $govuk-focus-text-colour;
     background-color: $govuk-focus-colour;
