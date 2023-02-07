@@ -28,7 +28,7 @@ gulp.task('sass', function () {
     .pipe(sass({ outputStyle: 'expanded' }).on('error', function (error) {
       // write a blank application.css to force browser refresh on error
       if (!fs.existsSync(stylesheetDirectory)) {
-        fs.mkdirSync(stylesheetDirectory)
+        fs.mkdirSync(path.join(__dirname, stylesheetDirectory))
       }
       fs.writeFileSync(path.join(stylesheetDirectory, 'application.css'), '')
       console.error('\n', error.messageFormatted, '\n')
