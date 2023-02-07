@@ -10,14 +10,7 @@ lib/extensions/_extensions.scss
 .start.pid
 .port.tmp
 public
-node_modules/
+node_modules/*
 .tmuxp.*
 app/assets/javascripts/build
-.idea
-/cypress-test
-/cypress/videos
-/cypress/screenshots
-/cypress/downloads
-/cypress/support
-/cypress/temp
-tmp/
+service/build/*
