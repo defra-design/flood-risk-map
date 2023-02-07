@@ -13,10 +13,21 @@ $govuk-breakpoints: (
 $govuk-assets-path: '/govuk/assets/';
 
 // Import GOV.UK Frontend and any extension styles if extensions have been configured
-@import ".tmp/sass/extensions";
+@import "lib/extensions/extensions";
+
+//
+// ITCSS
+// https://designnotes.blog.gov.uk/2018/02/19/developing-new-typography-and-spacing-for-gov-uk-frontend/
+//
+
+// Settings
 
 // Tools that aren't in Frontend
 @import "tools/mixins";
+
+// Generic
+
+// Elements
 
 // Objects
 @import "objects/buttons";
