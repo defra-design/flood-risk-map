@@ -12,6 +12,7 @@ lib/extensions/_extensions.scss
 public
 node_modules/
 .tmuxp.*
+app/assets/javascripts/build
 .idea
 /cypress-test
 /cypress/videos
