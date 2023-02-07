@@ -29,10 +29,15 @@ gulp.task('sass', function () {
       // write a blank application.css to force browser refresh on error
       console.log(!fs.existsSync(stylesheetDirectory), stylesheetDirectory)
       if (!fs.existsSync(stylesheetDirectory)) {
+        // try {
+        //   fs.mkdirSync(stylesheetDirectory)
+        // } catch (e) {
+        //   console.log(e)
+        // }
         try {
-          fs.mkdirSync(stylesheetDirectory)
-        } catch (e) {
-          console.log(e)
+          fs.mkdirSync(path.join(__dirname, stylesheetDirectory))
+        } catch (err) {
+          if (err.code !== 'EEXIST') throw err
         }
       }
       fs.writeFileSync(path.join(stylesheetDirectory, 'application.css'), '')
