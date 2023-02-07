@@ -21,9 +21,9 @@ gulp.task('generate-assets', gulp.series(
   'sass-extensions',
   'nunjucks',
   gulp.parallel(
-    'webpack',
-    'sass'
+    'webpack'
   ),
+  'sass',
   'copy-assets'
 ))
 gulp.task('default', gulp.series(
