@@ -93,7 +93,7 @@ function RiskMap (mapId, options) {
   const scenarioElement = document.createElement('div')
   scenarioElement.id = 'map-scenarios'
   scenarioElement.className = 'defra-map-scenarios'
-  scenarioElement.innerHTML = window.nunjucks.render('scenarios.html')
+  scenarioElement.innerHTML = window.nunjucks.render('scenarios.html', { model: { isRiskLabels: options.isRiskLabels } })
 
   const scenarioControl = new Control({
     element: scenarioElement

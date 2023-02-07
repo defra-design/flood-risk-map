@@ -30,7 +30,34 @@ var colno = 0;
 var output = "";
 try {
 var parentTemplate = null;
-output += "<div class=\"defra-map-scenarios__container\">\n    <button class=\"defra-map-scenario-button\" data-scenario=\"1\" aria-selected=\"true\">\n        <strong>Most likely</strong>\n        <span>3.3% chance</span>\n    </button>\n    <button class=\"defra-map-scenario-button\" data-scenario=\"2\">\n        <strong>Less likely</strong>\n        <span>1% chance</span>\n    </button>\n    <button class=\"defra-map-scenario-button\" data-scenario=\"3\">\n        <strong>Least likely</strong>\n        <span>0.1% chance</span>\n    </button>\n    <button class=\"defra-map-scenario-button\" data-scenario=\"4\">\n        <strong>Reservoir failure</strong>\n        <span>Very unlikely</span>\n    </button>\n</div>";
+output += "<div class=\"defra-map-scenarios__container\">\n    <button class=\"defra-map-scenario-button\" data-scenario=\"1\" aria-selected=\"true\">\n        <strong>";
+if(runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "model")),"isRiskLabels")) {
+output += "High risk";
+;
+}
+else {
+output += "Most likely";
+;
+}
+output += "</strong>\n        <span>3.3% chance</span>\n    </button>\n    <button class=\"defra-map-scenario-button\" data-scenario=\"2\">\n        <strong>";
+if(runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "model")),"isRiskLabels")) {
+output += "Medium risk";
+;
+}
+else {
+output += "Less likely";
+;
+}
+output += "</strong>\n        <span>1% chance</span>\n    </button>\n    <button class=\"defra-map-scenario-button\" data-scenario=\"3\">\n        <strong>";
+if(runtime.memberLookup((runtime.contextOrFrameLookup(context, frame, "model")),"isRiskLabels")) {
+output += "Low risk";
+;
+}
+else {
+output += "Least likely";
+;
+}
+output += "</strong>\n        <span>0.1% chance</span>\n    </button>\n    <button class=\"defra-map-scenario-button\" data-scenario=\"4\">\n        <strong>Reservoir failure</strong>\n        <span>Very unlikely</span>\n    </button>\n</div>";
 if(parentTemplate) {
 parentTemplate.rootRenderFunc(env, context, frame, runtime, cb);
 } else {
